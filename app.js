@@ -15,6 +15,7 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({extended: true}));
 app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
+app.use(express.static(path.join(__dirname, "/public")));
 
 main().then(()=>{
     console.log("connected to database");
@@ -26,9 +27,9 @@ async function main() {
   await mongoose.connect('mongodb://127.0.0.1:27017/wanderlust');
 }
 
-// app.get("/",(req, res)=>{
-//     res.send("Hi i am root");
-// })
+app.get("/",(req, res)=>{
+    res.send("Hi i am root");
+})
 
 //index route 
 app.get("/listings",async(req, res)=>{

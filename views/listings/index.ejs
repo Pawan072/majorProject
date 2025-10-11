@@ -1,13 +1,29 @@
 <% layout("/layouts/boilerplate") %>
 <body>
     <h3>All Listing</h3>
-    <form method="GET" action="/listings/new">
+    <!-- <form method="GET" action="/listings/new">
         <button>Create New listing</button>
-    </form>
+    </form> -->
+
+    <% for(Listing of allListing) { %>
+        <div class="card" style="width: 18rem;">
+            <img src="<%= Listing.image %>" class="card-img-top" alt="listing_image">
+            <div class="card-body">
+                <p class="card-text">
+                    <%= Listing.title %><br>
+                    <%= Listing.price %>
+                </p>
+            </div>
+        </div>
+    <% } %>
+
+
+
     <ul>
         <% for(Listing of allListing) { %>
             <li>
                 <a href="/listing/<%= Listing._id %>"><%= Listing.title %></a>
+                
             </li>
         <% } %>
     </ul>
