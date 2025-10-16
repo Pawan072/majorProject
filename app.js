@@ -6,6 +6,8 @@ const Listing = require("./models/listing.js")
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
+const wrapAsync = require("./utils/wrapAsync.js");
+const ExpressError = require("./utils/ExpressError.js");
 
 
 app.set("view engine","ejs");
@@ -43,18 +45,20 @@ app.get("/listing/:id", async (req, res)=>{
     res.render("listings/show.ejs",{listing});
 })
 
+
 //new route
-app.get("/listings/new", (req, res)=>[
+app.get("/listings/new", (req, res)=>{ // square brackets replace by curly brackets
     res.render("listings/addnewuser.ejs")
-]);
+});
+
+
 //create Route
-app.post("/listings",async (req, res)=>{
+app.post("/listings", wrapAsync (async (req, res, next)=>{
     let listings = req.body.listings;
     const newlisting = new Listing (listings);
     await newlisting.save();
     res.redirect("/listings");
-    console.log(newlisting);
-})
+}))
 
 // edit route 
 app.get("/listing/:id/edit", async (req, res)=>{
@@ -91,6 +95,16 @@ app.delete("/listing/listings/:id", async (req, res)=>{
 //     console.log("sample was saved");
 //     res.send("successfull testing");
 // })
+app.all("/*splat",(req, res, next)=>{
+    next(new ExpressError(404, "Page not Found!"))
+})
+
+
+app.use((err, req, res, next)=>{
+    let{statusCode, message}= err;
+    res.status(statusCode).send(message);
+});
+
 
 app.listen(port,()=>{
     console.log("server is running on",port);
