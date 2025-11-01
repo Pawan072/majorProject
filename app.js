@@ -9,6 +9,8 @@ const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
 const { listingSchema } = require("./schema.js");
+const Review = require("./models/review.js");
+const review = require("./models/review.js");
 
 
 
@@ -98,6 +100,20 @@ app.delete("/listing/listings/:id",wrapAsync (async (req, res)=>{
     res.redirect("/listings");
 }))
 
+// review section 
+// Post Route
+
+app.post("/listings/:id/reviews",async (req, res)=>{
+    let listing = await Listing.findById(req.params.id);
+    let newReview = new review(req.body.review);
+
+    listing.reviews.push(newReview);
+
+    await newReview.save();
+    await listing.save();
+
+    res.redirect(`/listing/${listing._id}`);
+})
 // app.get("/testListing",async (req, res)=>{
 //     let sampleListing = new listing({
 //         title: "My New Villa",
