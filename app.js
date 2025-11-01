@@ -78,7 +78,7 @@ app.post("/listings",validateListing, wrapAsync (async (req, res, next)=>{
 // edit route 
 app.get("/listing/:id/edit", wrapAsync (async (req, res)=>{
     let {id} = req.params;
-    const listing = await Listing.findById(id);ffff
+    const listing = await Listing.findById(id);
     res.render("listings/edit.ejs", {listing});
 }))
 
